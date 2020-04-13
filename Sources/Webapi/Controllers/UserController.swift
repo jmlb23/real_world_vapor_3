@@ -29,9 +29,9 @@ final class UserController {
   func register(_ req: Request) throws -> Future<String> { 
     let connection = req.databaseConnection(to: .sqlite)
     let reg = try? req.content.decode(Register.self)
-    let repo = try! req.sharedContainer.make(Repository<UserE,SQLiteDatabase,DatabaseConnectable>.self)
+    let dependency = try? req.sharedContainer.make(Repository<UserE,SQLiteDatabase,DatabaseConnectable>.self)
     
-    if let request = reg{
+    if let request = reg, let repo = dependency{
       let user = request.map({lo in UserE.init(id: UUID(), username: lo.username, password: lo.password.encripted()!, email: lo.email, bio: nil, image: nil)})
       return connection.flatMap({cnn in user.flatMap({user in repo.add(user, cnn).map({x in x.description})})})
 

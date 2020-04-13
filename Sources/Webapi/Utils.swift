@@ -4,7 +4,7 @@ import Crypto
 extension String {
 
   func encripted() -> String?{
-    try? BCrypt.hash("LosslessDataConvertible",cost: 10)
+    try? BCrypt.hash(self,cost: 10)
   }
-  
+
 }
